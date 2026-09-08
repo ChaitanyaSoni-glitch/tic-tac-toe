@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="description" content="Tic Tac Toe — A premium, futuristic browser game with AI opponents.">
+  <title>Tic Tac Toe</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Background Canvases -->
+  <canvas id="particles-bg" aria-hidden="true"></canvas>
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <!-- Top Bar: Theme + Sound controls -->
+  <div class="top-bar">
+    <button class="icon-btn" id="btn-toggle-theme" aria-label="Toggle theme" title="Toggle theme">
+      <span id="theme-icon">☀️</span>
+    </button>
+    <button class="icon-btn" id="btn-toggle-sound" aria-label="Mute sound" title="Toggle sound">
+      <span id="sound-icon">🔊</span>
+    </button>
+  </div>
+
+  <!-- Main App -->
+  <div id="app">
+
+    <!-- ==================== HOME SCREEN ==================== -->
+    <section id="home-screen" class="screen home-screen active" aria-label="Home screen">
+      <div class="glass-card">
+        <h1 class="game-title">Tic Tac Toe</h1>
+        <p class="game-subtitle">Challenge your mind. Never miss a move.</p>
+
+        <!-- Mode Selection -->
+        <div class="mode-buttons">
+          <button class="btn btn-primary" id="btn-play-ai" aria-pressed="true">
+            🤖 Play vs AI
+          </button>
+          <button class="btn btn-secondary" id="btn-play-pvp" aria-pressed="false">
+            👥 Play vs Friend
+          </button>
+        </div>
+
+        <!-- Difficulty Selector (AI only) -->
+        <div class="difficulty-selector visible" id="difficulty-selector">
+          <p class="selector-label">Difficulty</p>
+          <div class="difficulty-options" role="radiogroup" aria-label="AI difficulty">
+            <button class="option-btn diff-btn" data-difficulty="easy" role="radio" aria-checked="false">Easy</button>
+            <button class="option-btn diff-btn selected" data-difficulty="medium" role="radio" aria-checked="true">Medium</button>
+            <button class="option-btn diff-btn" data-difficulty="impossible" role="radio" aria-checked="false">Impossible</button>
+          </div>
+        </div>
+
+        <!-- Symbol Selector -->
+        <div class="symbol-selector">
+          <p class="selector-label">Play as</p>
+          <div class="symbol-options" role="radiogroup" aria-label="Choose your symbol">
+            <button class="option-btn symbol-btn selected" data-symbol="X" role="radio" aria-checked="true">X</button>
+            <button class="option-btn symbol-btn" data-symbol="O" role="radio" aria-checked="false">O</button>
+          </div>
+        </div>
+
+        <!-- Start Button -->
+        <button class="btn btn-primary" id="btn-start-game" style="width: 100%;">
+          🎮 Start Game
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== GAME SCREEN ==================== -->
+    <section id="game-screen" class="screen game-screen" aria-label="Game screen">
+      <div class="glass-card">
+
+        <!-- Back Button -->
+        <button class="back-btn" id="btn-back" aria-label="Back to home">
+          ← Back
+        </button>
+
+        <!-- Game Info Badge -->
+        <div class="game-info">
+          <span class="badge badge-ai" id="game-badge">AI · Medium</span>
+        </div>
+
+        <!-- Scoreboard -->
+        <div class="scoreboard" role="status" aria-label="Scores">
+          <div class="score-item">
+            <div class="score-label x-label">X</div>
+            <div class="score-value" id="score-x">0</div>
+          </div>
+          <div class="score-item">
+            <div class="score-label draw-label">Draw</div>
+            <div class="score-value" id="score-draws">0</div>
+          </div>
+          <div class="score-item">
+            <div class="score-label o-label">O</div>
+            <div class="score-value" id="score-o">0</div>
+          </div>
+        </div>
+
+        <!-- Turn Indicator -->
+        <div class="turn-indicator" id="turn-indicator" role="status" aria-live="polite">
+          <span class="turn-symbol x-turn">X</span>'S TURN <span class="turn-dot">●</span>
+        </div>
+
+        <!-- Board -->
+        <div class="board-container">
+          <div class="board" id="game-board" role="grid" aria-label="Tic Tac Toe board">
+            <!-- Cells are rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Game Actions -->
+        <div class="game-actions">
+          <button class="btn btn-small btn-secondary" id="btn-restart">🔄 Restart</button>
+          <button class="btn btn-small btn-secondary" id="btn-new-game">🆕 New Game</button>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ==================== GAME OVER MODAL ==================== -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-label="Game over">
+    <div class="modal-content">
+      <div class="modal-emoji" id="modal-emoji" aria-hidden="true">🏆</div>
+      <h2 class="modal-title x-win" id="modal-title">X WINS!</h2>
+      <p class="modal-subtitle" id="modal-subtitle">Incredible play!</p>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="btn-play-again">🔁 Play Again</button>
+        <button class="btn btn-secondary" id="btn-modal-new-game">🆕 New Game</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts (order matters — dependencies first) -->
+  <script src="js/game-logic.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
